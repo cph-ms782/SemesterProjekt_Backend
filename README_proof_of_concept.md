@@ -23,9 +23,9 @@
 
 `export DEPLOYED="DEV_ON_DIGITAL_OCEAN"`
 
-`export USER="YOUR_DB_USER"`
+`export USER="script_user"`
 
-`export PW="YOUR_DB_PASSWORD"`
+`export PW="script_user's_PASSWORD"`
 
 `export CONNECTION_XXXX="jdbc:mysql://localhost:3306/db_table"
 `
