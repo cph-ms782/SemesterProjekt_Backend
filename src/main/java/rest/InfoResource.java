@@ -1,6 +1,8 @@
 package rest;
 
+import dto.CitiesDTO;
 import entities.User;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -74,6 +76,21 @@ public class InfoResource {
         utils.SetupTestUsers setup = new utils.SetupTestUsers();
         setup.fill();
         return "{\"msg\": \"DB filled\"}";
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("cities")
+    public List<CitiesDTO> getCities() {
+        
+        List<CitiesDTO> cities = new ArrayList<>();
+        cities.add(new CitiesDTO("Liverpool"));
+        cities.add(new CitiesDTO("Manchester"));
+        cities.add(new CitiesDTO("Birmingham"));
+        cities.add(new CitiesDTO("Southampton"));
+        cities.add(new CitiesDTO("Leeds"));
+        
+        return cities;
     }
     
 }
