@@ -92,5 +92,20 @@ public class InfoResource {
         
         return cities;
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("matches")
+    public List<CitiesDTO> getMatches() {
+        
+        List<CitiesDTO> cities = new ArrayList<>();
+        cities.add(new CitiesDTO("Liverpool"));
+        cities.add(new CitiesDTO("Manchester"));
+        cities.add(new CitiesDTO("Birmingham"));
+        cities.add(new CitiesDTO("Southampton"));
+        cities.add(new CitiesDTO("Leeds"));
+        
+        return cities;
+    }
     
 }
