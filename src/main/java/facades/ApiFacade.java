@@ -66,8 +66,8 @@ public class ApiFacade {
         return jsonStr;
     }
 
-    public List<TeamDTO> getAllDataInParallelWithQueueAndDTO() throws ProtocolException, IOException, InterruptedException, ExecutionException {
-        List<TeamDTO> results = new ArrayList();
+    public List<TeamDTO> getAllDataTeams() throws IOException, InterruptedException, ExecutionException {
+
         List<String> URLS = new ArrayList();
         URLS.add("http://api.football-data.org/v2/teams/57");
         URLS.add("http://api.football-data.org/v2/teams/58");
@@ -88,6 +88,12 @@ public class ApiFacade {
         URLS.add("http://api.football-data.org/v2/teams/397");
         URLS.add("http://api.football-data.org/v2/teams/563");
         URLS.add("http://api.football-data.org/v2/teams/1044");
+
+        return getAllDataInParallelWithQueueAndDTO(URLS);
+    }
+
+    public List<TeamDTO> getAllDataInParallelWithQueueAndDTO(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
+        List<TeamDTO> results = new ArrayList();
 
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
         Gson gson = new GsonBuilder()
@@ -119,6 +125,59 @@ public class ApiFacade {
                     System.out.println("interruptedException: " + interruptedException);
                 } catch (ExecutionException executionException) {
                     System.out.println("executionException: " + executionException);
+                } catch (NullPointerException ex) {
+                    System.out.println("NullPointerException: " + ex);
+                }
+            } else {
+                queue.add(cpo);
+            }
+        }
+        workingJack.shutdown();
+        for (int i = 0; i < results.size(); i++) {
+            System.out.println(results.get(i));
+        }
+        return results;
+    }
+
+    public List<TeamDTO> getAllTeams() throws IOException, InterruptedException, ExecutionException {
+
+        List<String> URLS = new ArrayList();
+        URLS.add("http://api.football-data.org/v2/competitions/PL/teams?season=2019");
+
+        return getAllTeamsData(URLS);
+    }
+
+    public List<TeamDTO> getAllTeamsData(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
+        List<TeamDTO> results = new ArrayList();
+
+        Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .create();
+        ExecutorService workingJack = Executors.newCachedThreadPool();
+        for (String url : URLS) {
+            Future<JsonObject> future;
+            future = workingJack.submit(() -> {
+                JsonObject jsonObject = new JsonParser().parse(getFootballApi(url)).getAsJsonObject();
+                return jsonObject;
+            });
+            queue.add(future);
+        }
+        while (!queue.isEmpty()) {
+            Future<JsonObject> cpo = queue.poll();
+            if (cpo.isDone()) {
+                try {
+                    System.out.println("inde i koden");
+                    // CHANGE WHEN USING OTHER API
+                    // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
+                    for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
+                        results.add(new TeamDTO(
+                                el.getAsJsonObject().get("name").getAsString(),
+                                el.getAsJsonObject().get("crestUrl").getAsString()
+                        ));
+                    }
                 } catch (NullPointerException ex) {
                     System.out.println("NullPointerException: " + ex);
                 }
