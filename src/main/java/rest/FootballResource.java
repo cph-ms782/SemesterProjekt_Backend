@@ -33,11 +33,12 @@ public class FootballResource {
         List<TeamDTO> data = facade.getAllTeams();
         return data;
     }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("allmatches")
-    public List<MatchDTO> getMatches() throws IOException, ProtocolException, ExecutionException, InterruptedException {
-        List<MatchDTO> data = facade.getAllDataMatches(58);
+    public List<MatchDTO> getMatches(int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        List<MatchDTO> data = facade.getAllDataMatches(id);
         return data;
     }
 

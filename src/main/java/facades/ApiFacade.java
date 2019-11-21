@@ -27,7 +27,7 @@ import dto.TeamDTO;
  *
  */
 public class ApiFacade {
-
+    
     private static ApiFacade instance;
 
     //Private Constructor to ensure Singleton
@@ -45,7 +45,7 @@ public class ApiFacade {
         }
         return instance;
     }
-
+    
     private String getFootballApi(String urlApi) throws MalformedURLException, IOException {
         URL url = new URL(urlApi);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -63,37 +63,29 @@ public class ApiFacade {
 //        System.out.println("JSON " + jsonStr);
         return jsonStr;
     }
-
+    
     public List<MatchDTO> getAllDataMatches(int id) throws IOException, InterruptedException, ExecutionException {
-
+        
         List<String> URLS = new ArrayList();
-
+        
         URLS.add("http://api.football-data.org/v2/teams/" + id + "/matches/");
-
+        
         return getSeasonMatches(URLS);
     }
-
+    
     public List<TeamDTO> getAllTeams() throws IOException, InterruptedException, ExecutionException {
-
+        
         List<String> URLS = new ArrayList();
         URLS.add("http://api.football-data.org/v2/competitions/PL/teams?season=2019");
-
+        
         return getAllTeamsData(URLS);
     }
-
-    public static void main(String[] args) throws IOException, ProtocolException, InterruptedException, ExecutionException {
-        ApiFacade api = new ApiFacade();
-        List<String> URLS = new ArrayList();
-
-        URLS.add("http://api.football-data.org/v2/teams/58/matches/");
-        api.getSeasonMatches(URLS);
-    }
-
+    
     public List<MatchDTO> getSeasonMatches(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
         List<MatchDTO> results = new ArrayList();
-
+        
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
-
+        
         ExecutorService workingJack = Executors.newCachedThreadPool();
         for (String url : URLS) {
             Future<JsonObject> future;
@@ -151,10 +143,10 @@ public class ApiFacade {
         }
         return results;
     }
-
+    
     public List<TeamDTO> getAllTeamsData(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
         List<TeamDTO> results = new ArrayList();
-
+        
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -196,7 +188,7 @@ public class ApiFacade {
         }
         return results;
     }
-
+    
 }
 
 //
