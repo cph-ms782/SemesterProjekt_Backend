@@ -1,6 +1,7 @@
 package rest;
 
 import dto.MatchDTO;
+import dto.MatchesDTO;
 import dto.TeamDTO;
 import facades.ApiFacade;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -36,10 +38,9 @@ public class FootballResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("allmatches")
-    public List<MatchDTO> getMatches(int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+    @Path("allmatches/{id}")
+    public List<MatchDTO> getMatches(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
         List<MatchDTO> data = facade.getAllDataMatches(id);
         return data;
     }
-
 }
