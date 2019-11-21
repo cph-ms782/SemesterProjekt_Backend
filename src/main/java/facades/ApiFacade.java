@@ -120,7 +120,9 @@ public class ApiFacade {
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                     results.add(new TeamDTO(
                             cpo.get().get("name").getAsString(),
-                            cpo.get().get("crestUrl").getAsString()));
+                            cpo.get().get("crestUrl").getAsString(),
+                            cpo.get().get("teamID").getAsInt()
+                    ));
                 } catch (InterruptedException interruptedException) {
                     System.out.println("interruptedException: " + interruptedException);
                 } catch (ExecutionException executionException) {
@@ -169,13 +171,16 @@ public class ApiFacade {
             Future<JsonObject> cpo = queue.poll();
             if (cpo.isDone()) {
                 try {
-                    System.out.println("inde i koden");
+                    System.out.println("inde i getAllTeamsData");
                     // CHANGE WHEN USING OTHER API
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                     for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
+                        System.out.println("" + el);
+                        int jnhj = Integer.parseInt(el.getAsJsonObject().get("id").getAsString());
                         results.add(new TeamDTO(
                                 el.getAsJsonObject().get("name").getAsString(),
-                                el.getAsJsonObject().get("crestUrl").getAsString()
+                                el.getAsJsonObject().get("crestUrl").getAsString(),
+                                Integer.parseInt(el.getAsJsonObject().get("id").getAsString())
                         ));
                     }
                 } catch (NullPointerException ex) {
