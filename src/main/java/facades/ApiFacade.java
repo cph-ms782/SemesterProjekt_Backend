@@ -112,29 +112,30 @@ public class ApiFacade {
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                     for (JsonElement match : cpo.get().get("matches").getAsJsonArray()) {
                         String status = match.getAsJsonObject().get("status").getAsString();
-                        System.out.println(status);
-                        if (status != null && status.equals("FINISHED")) {
+                        if (status != null && status.equals("SCHEDULED")) {
+//                        if (status != null && status.equals("FINISHED")) {
+//
+//                            JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
+//                            JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
+//                            JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
+//                            JsonObject elFullTime = (JsonObject) elScore.getAsJsonObject("fullTime");
+//                            results.add(new MatchDTO(
+//                                    elHomeTeam.get("name").getAsString(),
+//                                    elFullTime.get("homeTeam").getAsString(),
+//                                    elAwayTeam.get("name").getAsString(),
+//                                    elFullTime.get("awayTeam").getAsString(),
+//                                    elScore.get("winner").getAsString(),
+//                                    match.getAsJsonObject().get("utcDate").getAsString()));
 
                             JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
                             JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
-                            JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
-                            JsonObject elFullTime = (JsonObject) elScore.getAsJsonObject("fullTime");
-                            System.out.println(elHomeTeam.get("name").getAsString());
-                            System.out.println(elFullTime.get("homeTeam").getAsString());
-                            System.out.println(elAwayTeam.get("name").getAsString());
-                            System.out.println(elFullTime.get("awayTeam").getAsString());
-                            System.out.println(elScore.get("winner").getAsString());
-                            System.out.println(match.getAsJsonObject().get("utcDate").getAsString());
-                            System.out.println();
-
                             results.add(new MatchDTO(
                                     elHomeTeam.get("name").getAsString(),
-                                    elFullTime.get("homeTeam").getAsString(),
+                                    "",
                                     elAwayTeam.get("name").getAsString(),
-                                    elFullTime.get("awayTeam").getAsString(),
-                                    elScore.get("winner").getAsString(),
-                                    match.getAsJsonObject().get("utcDate").getAsString())
-                            );
+                                    "",
+                                    "",
+                                    match.getAsJsonObject().get("utcDate").getAsString()));
                         }
                     }
                 } catch (NullPointerException ex) {
