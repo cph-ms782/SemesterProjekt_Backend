@@ -27,7 +27,7 @@ import dto.TeamDTO;
  *
  */
 public class ApiFacade {
-    
+
     private static ApiFacade instance;
 
     //Private Constructor to ensure Singleton
@@ -45,7 +45,7 @@ public class ApiFacade {
         }
         return instance;
     }
-    
+
     private String getFootballApi(String urlApi) throws MalformedURLException, IOException {
         URL url = new URL(urlApi);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -63,29 +63,29 @@ public class ApiFacade {
 //        System.out.println("JSON " + jsonStr);
         return jsonStr;
     }
-    
-    public List<MatchDTO> getAllDataMatches(int id) throws IOException, InterruptedException, ExecutionException {
-        
+
+    public List<MatchDTO> getAllDataMatches(int id, Boolean isPlayed) throws IOException, InterruptedException, ExecutionException {
+
         List<String> URLS = new ArrayList();
-        
+
         URLS.add("http://api.football-data.org/v2/teams/" + id + "/matches/");
-        
-        return getSeasonMatches(URLS);
+
+        return getSeasonMatches(URLS, isPlayed);
     }
-    
+
     public List<TeamDTO> getAllTeams() throws IOException, InterruptedException, ExecutionException {
-        
+
         List<String> URLS = new ArrayList();
         URLS.add("http://api.football-data.org/v2/competitions/PL/teams?season=2019");
-        
+
         return getAllTeamsData(URLS);
     }
-    
-    public List<MatchDTO> getSeasonMatches(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
+
+    public List<MatchDTO> getSeasonMatches(List<String> URLS, Boolean isPlayed) throws ProtocolException, IOException, InterruptedException, ExecutionException {
         List<MatchDTO> results = new ArrayList();
-        
+
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
-        
+
         ExecutorService workingJack = Executors.newCachedThreadPool();
         for (String url : URLS) {
             Future<JsonObject> future;
@@ -105,30 +105,31 @@ public class ApiFacade {
 
                     for (JsonElement match : cpo.get().get("matches").getAsJsonArray()) {
                         String status = match.getAsJsonObject().get("status").getAsString();
-                        if (status != null && status.equals("SCHEDULED")) {
-//                        if (status != null && status.equals("FINISHED")) {
-//
-//                            JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
-//                            JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
-//                            JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
-//                            JsonObject elFullTime = (JsonObject) elScore.getAsJsonObject("fullTime");
-//                            results.add(new MatchDTO(
-//                                    elHomeTeam.get("name").getAsString(),
-//                                    elFullTime.get("homeTeam").getAsString(),
-//                                    elAwayTeam.get("name").getAsString(),
-//                                    elFullTime.get("awayTeam").getAsString(),
-//                                    elScore.get("winner").getAsString(),
-//                                    match.getAsJsonObject().get("utcDate").getAsString()));
+                        if (status != null) {
+                            if (isPlayed && status.equals("FINISHED")) {
 
-                            JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
-                            JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
-                            results.add(new MatchDTO(
-                                    elHomeTeam.get("name").getAsString(),
-                                    "",
-                                    elAwayTeam.get("name").getAsString(),
-                                    "",
-                                    "",
-                                    match.getAsJsonObject().get("utcDate").getAsString()));
+                                JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
+                                JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
+                                JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
+                                JsonObject elFullTime = (JsonObject) elScore.getAsJsonObject("fullTime");
+                                results.add(new MatchDTO(
+                                        elHomeTeam.get("name").getAsString(),
+                                        elFullTime.get("homeTeam").getAsString(),
+                                        elAwayTeam.get("name").getAsString(),
+                                        elFullTime.get("awayTeam").getAsString(),
+                                        elScore.get("winner").getAsString(),
+                                        match.getAsJsonObject().get("utcDate").getAsString()));
+                            } else if (!isPlayed && status.equals("SCHEDULED")){
+                                JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
+                                JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
+                                results.add(new MatchDTO(
+                                        elHomeTeam.get("name").getAsString(),
+                                        "",
+                                        elAwayTeam.get("name").getAsString(),
+                                        "",
+                                        "",
+                                        match.getAsJsonObject().get("utcDate").getAsString()));
+                            }
                         }
                     }
                 } catch (NullPointerException ex) {
@@ -144,10 +145,10 @@ public class ApiFacade {
         }
         return results;
     }
-    
+
     public List<TeamDTO> getAllTeamsData(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
         List<TeamDTO> results = new ArrayList();
-        
+
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -192,7 +193,7 @@ public class ApiFacade {
         }
         return results;
     }
-    
+
 }
 
 //

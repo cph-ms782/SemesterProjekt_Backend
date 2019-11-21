@@ -38,9 +38,17 @@ public class FootballResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("allmatches/{id}")
-    public List<MatchDTO> getMatches(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
-        List<MatchDTO> data = facade.getAllDataMatches(id);
+    @Path("allteammatchdates/{id}")
+    public List<MatchDTO> getMatchDates(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        List<MatchDTO> data = facade.getAllDataMatches(id, false);
+        return data;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("allteammatchresults/{id}")
+    public List<MatchDTO> getMatchResults(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        List<MatchDTO> data = facade.getAllDataMatches(id, true);
         return data;
     }
 }
