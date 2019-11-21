@@ -10,13 +10,15 @@ public class TeamDTO {
 
     private String name;
     private String crestUrl;
-
-    public TeamDTO(String name, String url) {
-        this.name = name;
-        this.crestUrl = url;
-    }
+    private Integer teamID;
 
     public TeamDTO() {
+    }
+
+    public TeamDTO(String name, String crestUrl, Integer teamID) {
+        this.name = name;
+        this.crestUrl = crestUrl;
+        this.teamID = teamID;
     }
 
     public String getName() {
@@ -35,11 +37,20 @@ public class TeamDTO {
         this.crestUrl = crestUrl;
     }
 
+    public Integer getTeamID() {
+        return teamID;
+    }
+
+    public void setTeamID(Integer teamID) {
+        this.teamID = teamID;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 47 * hash + Objects.hashCode(this.name);
-        hash = 47 * hash + Objects.hashCode(this.crestUrl);
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.name);
+        hash = 89 * hash + Objects.hashCode(this.crestUrl);
+        hash = 89 * hash + Objects.hashCode(this.teamID);
         return hash;
     }
 
@@ -61,12 +72,17 @@ public class TeamDTO {
         if (!Objects.equals(this.crestUrl, other.crestUrl)) {
             return false;
         }
+        if (!Objects.equals(this.teamID, other.teamID)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "TeamDTO{" + "name=" + name + ", crestUrl=" + crestUrl + '}';
+        return "TeamDTO{" + "name=" + name + ", crestUrl=" + crestUrl + ", teamID=" + teamID + '}';
     }
+
+      
 
 }

@@ -102,6 +102,7 @@ public class ApiFacade {
                     System.out.println("inde i koden");
                     // CHANGE WHEN USING OTHER API
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
+
                     for (JsonElement match : cpo.get().get("matches").getAsJsonArray()) {
                         String status = match.getAsJsonObject().get("status").getAsString();
                         if (status != null && status.equals("SCHEDULED")) {
@@ -166,13 +167,16 @@ public class ApiFacade {
             Future<JsonObject> cpo = queue.poll();
             if (cpo.isDone()) {
                 try {
-                    System.out.println("inde i koden");
+                    System.out.println("inde i getAllTeamsData");
                     // CHANGE WHEN USING OTHER API
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                     for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
+                        System.out.println("" + el);
+                        int jnhj = Integer.parseInt(el.getAsJsonObject().get("id").getAsString());
                         results.add(new TeamDTO(
                                 el.getAsJsonObject().get("name").getAsString(),
-                                el.getAsJsonObject().get("crestUrl").getAsString()
+                                el.getAsJsonObject().get("crestUrl").getAsString(),
+                                Integer.parseInt(el.getAsJsonObject().get("id").getAsString())
                         ));
                     }
                 } catch (NullPointerException ex) {
