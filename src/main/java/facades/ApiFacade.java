@@ -22,6 +22,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dto.MatchDTO;
 import dto.TeamDTO;
+import entities.ParserOfDates;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,6 +49,22 @@ public class ApiFacade {
         return instance;
     }
 
+    private ParserOfDates getDates(String date) {
+        String pattern = "(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})Z";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(date);
+        if (m.find()) {
+            m.group(1);
+            m.group(2);
+            m.group(3);
+            m.group(4);
+            m.group(5);
+        } else {
+            System.out.println("NO MATCH");
+        }
+        return new ParserOfDates(m.group(1), m.group(2), m.group(3), m.group(4), m.group(5));
+    }
+
     private String getFootballApi(String urlApi) throws MalformedURLException, IOException {
         URL url = new URL(urlApi);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -60,7 +79,6 @@ public class ApiFacade {
                 jsonStr = scan.nextLine();
             }
         }
-//        System.out.println("JSON " + jsonStr);
         return jsonStr;
     }
 
@@ -102,12 +120,10 @@ public class ApiFacade {
                     System.out.println("inde i koden");
                     // CHANGE WHEN USING OTHER API
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
-
                     for (JsonElement match : cpo.get().get("matches").getAsJsonArray()) {
                         String status = match.getAsJsonObject().get("status").getAsString();
                         if (status != null) {
                             if (isPlayed && status.equals("FINISHED")) {
-
                                 JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
                                 JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
                                 JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
@@ -118,17 +134,26 @@ public class ApiFacade {
                                         elAwayTeam.get("name").getAsString(),
                                         elFullTime.get("awayTeam").getAsString(),
                                         elScore.get("winner").getAsString(),
-                                        match.getAsJsonObject().get("utcDate").getAsString()));
-                            } else if (!isPlayed && status.equals("SCHEDULED")){
+                                        getDates(match.getAsJsonObject().get("utcDate").getAsString()).toDate()
+                                ));
+                            } else if (!isPlayed && status.equals("SCHEDULED")) {
                                 JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
                                 JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
+                                ParserOfDates pDate = getDates(match.getAsJsonObject().get("utcDate").getAsString());
+                                String printDate = null;
+                                if (pDate != null && pDate.getHour().equals("00")) {
+                                    printDate = pDate.toDate();
+                                } else {
+                                    printDate = pDate.toString();
+                                }
                                 results.add(new MatchDTO(
                                         elHomeTeam.get("name").getAsString(),
                                         "",
                                         elAwayTeam.get("name").getAsString(),
                                         "",
                                         "",
-                                        match.getAsJsonObject().get("utcDate").getAsString()));
+                                        printDate
+                                ));
                             }
                         }
                     }
@@ -195,47 +220,3 @@ public class ApiFacade {
     }
 
 }
-
-//
-//
-//
-//
-//        while (!queue.isEmpty()) {
-//            Future<JsonObject> cpo = queue.poll();
-//            if (cpo.isDone()) {
-//                try {
-//                    // CHANGE WHEN USING OTHER API
-//                    // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
-//                    for (Map.Entry<String, JsonElement> entry : cpo.get().entrySet()) {
-//                        TeamDTO td = new TeamDTO();
-//                        if (entry.getKey().equals("name")) {
-//                            td.setName(entry.getValue().getAsString());
-//                        }
-//
-////                        td.setName(cpo.get().get("name").getAsString());
-////                        td.setCrestUrl(cpo.get().get("crestUrl").getAsString());
-//                        results.add(td);
-//                    }
-////                    results.add(new TeamDTO(
-////                            cpo.get().get("name").getAsString(),
-////                            cpo.get().get("crestUrl").getAsString()
-////                    ));
-//                } catch (InterruptedException interruptedException) {
-//                    System.out.println("interruptedException: " + interruptedException);
-//                } catch (ExecutionException executionException) {
-//                    System.out.println("executionException: " + executionException);
-//                } catch (NullPointerException ex) {
-//                    System.out.println("NullPointerException: " + ex);
-//                }
-//            } else {
-//                queue.add(cpo);
-//            }
-//        }
-//        workingJack.shutdown();
-//        for (int i = 0; i < results.size(); i++) {
-//            System.out.println(results.get(i));
-//        }
-//        return results;
-//    }
-//
-//}
