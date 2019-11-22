@@ -29,6 +29,7 @@ import dto.TeamDTO;
 public class ApiFacade {
 
     private static ApiFacade instance;
+    private static List<TeamDTO> teamList = new ArrayList();
 
     //Private Constructor to ensure Singleton
     private ApiFacade() {
@@ -82,8 +83,8 @@ public class ApiFacade {
     }
 
     public List<MatchDTO> getSeasonMatches(List<String> URLS, Boolean isPlayed) throws ProtocolException, IOException, InterruptedException, ExecutionException {
-        List<MatchDTO> results = new ArrayList();
 
+        List<MatchDTO> seasonMatches = new ArrayList();
         Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
 
         ExecutorService workingJack = Executors.newCachedThreadPool();
@@ -112,17 +113,17 @@ public class ApiFacade {
                                 JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
                                 JsonObject elScore = (JsonObject) match.getAsJsonObject().get("score");
                                 JsonObject elFullTime = (JsonObject) elScore.getAsJsonObject("fullTime");
-                                results.add(new MatchDTO(
+                                seasonMatches.add(new MatchDTO(
                                         elHomeTeam.get("name").getAsString(),
                                         elFullTime.get("homeTeam").getAsString(),
                                         elAwayTeam.get("name").getAsString(),
                                         elFullTime.get("awayTeam").getAsString(),
                                         elScore.get("winner").getAsString(),
                                         match.getAsJsonObject().get("utcDate").getAsString()));
-                            } else if (!isPlayed && status.equals("SCHEDULED")){
+                            } else if (!isPlayed && status.equals("SCHEDULED")) {
                                 JsonObject elHomeTeam = (JsonObject) match.getAsJsonObject().get("homeTeam");
                                 JsonObject elAwayTeam = (JsonObject) match.getAsJsonObject().get("awayTeam");
-                                results.add(new MatchDTO(
+                                seasonMatches.add(new MatchDTO(
                                         elHomeTeam.get("name").getAsString(),
                                         "",
                                         elAwayTeam.get("name").getAsString(),
@@ -140,58 +141,61 @@ public class ApiFacade {
             }
         }
         workingJack.shutdown();
-        for (int i = 0; i < results.size(); i++) {
-            System.out.println(results.get(i));
+        for (int i = 0; i < seasonMatches.size(); i++) {
+            System.out.println(seasonMatches.get(i));
         }
-        return results;
+        return seasonMatches;
     }
 
     public List<TeamDTO> getAllTeamsData(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
-        List<TeamDTO> results = new ArrayList();
 
-        Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .create();
-        ExecutorService workingJack = Executors.newCachedThreadPool();
-        for (String url : URLS) {
-            Future<JsonObject> future;
-            future = workingJack.submit(() -> {
-                JsonObject jsonObject = new JsonParser().parse(getFootballApi(url)).getAsJsonObject();
-                return jsonObject;
-            });
-            queue.add(future);
-        }
-        while (!queue.isEmpty()) {
-            Future<JsonObject> cpo = queue.poll();
-            if (cpo.isDone()) {
-                try {
-                    System.out.println("inde i getAllTeamsData");
-                    // CHANGE WHEN USING OTHER API
-                    // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
-                    for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
-                        System.out.println("" + el);
-                        int jnhj = Integer.parseInt(el.getAsJsonObject().get("id").getAsString());
-                        results.add(new TeamDTO(
-                                el.getAsJsonObject().get("name").getAsString(),
-                                el.getAsJsonObject().get("crestUrl").getAsString(),
-                                Integer.parseInt(el.getAsJsonObject().get("id").getAsString())
-                        ));
+        System.out.println("teamList size: " + teamList.size());
+        if (teamList.size() == 0) {
+            Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .serializeNulls()
+                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                    .create();
+            ExecutorService workingJack = Executors.newCachedThreadPool();
+            for (String url : URLS) {
+                Future<JsonObject> future;
+                future = workingJack.submit(() -> {
+                    JsonObject jsonObject = new JsonParser().parse(getFootballApi(url)).getAsJsonObject();
+                    return jsonObject;
+                });
+                queue.add(future);
+            }
+            while (!queue.isEmpty()) {
+                Future<JsonObject> cpo = queue.poll();
+                if (cpo.isDone()) {
+                    try {
+                        System.out.println("inde i getAllTeamsData");
+                        // CHANGE WHEN USING OTHER API
+                        // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
+                        for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
+                            System.out.println("" + el);
+                            int jnhj = Integer.parseInt(el.getAsJsonObject().get("id").getAsString());
+                            teamList.add(new TeamDTO(
+                                    el.getAsJsonObject().get("name").getAsString(),
+                                    el.getAsJsonObject().get("crestUrl").getAsString(),
+                                    Integer.parseInt(el.getAsJsonObject().get("id").getAsString())
+                            ));
+                        }
+                    } catch (NullPointerException ex) {
+                        System.out.println("NullPointerException: " + ex);
                     }
-                } catch (NullPointerException ex) {
-                    System.out.println("NullPointerException: " + ex);
+                } else {
+                    queue.add(cpo);
                 }
-            } else {
-                queue.add(cpo);
+            }
+            workingJack.shutdown();
+            for (int i = 0; i < teamList.size(); i++) {
+                System.out.println(teamList.get(i));
             }
         }
-        workingJack.shutdown();
-        for (int i = 0; i < results.size(); i++) {
-            System.out.println(results.get(i));
-        }
-        return results;
+        System.out.println("results size: " + teamList.size());
+        return teamList;
     }
 
 }
