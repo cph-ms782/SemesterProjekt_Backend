@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 @Path("fb")
 public class FootballResource {
 
-    ApiFacade facade = ApiFacade.getApiFacade();
+    ApiFacade facade;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -32,7 +32,9 @@ public class FootballResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("teams")
     public List<TeamDTO> getTeams() throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
         List<TeamDTO> data = facade.getAllTeams();
+        facade = null;
         return data;
     }
 
@@ -40,7 +42,9 @@ public class FootballResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("allteammatchdates/{id}")
     public List<MatchDTO> getMatchDates(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
         List<MatchDTO> data = facade.getAllDataMatches(id, false);
+        facade = null;
         return data;
     }
 
@@ -48,7 +52,9 @@ public class FootballResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("allteammatchresults/{id}")
     public List<MatchDTO> getMatchResults(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
         List<MatchDTO> data = facade.getAllDataMatches(id, true);
+        facade = null;
         return data;
     }
 }
