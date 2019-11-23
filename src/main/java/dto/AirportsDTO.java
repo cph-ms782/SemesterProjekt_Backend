@@ -8,28 +8,28 @@ import java.util.Objects;
  *
  * @author martin
  */
-public class TeamAirportDTO {
+public class AirportsDTO {
 
-    private List<String> teams = new ArrayList();
+    private List<String> airports = new ArrayList();
 
-    public TeamAirportDTO() {
+    public AirportsDTO() {
     }
 
-    public TeamAirportDTO(List<String> team) {
-        this.teams = team;
+    public AirportsDTO(List<String> airports) {
+        this.airports = airports;
     }
 
-    public List<String> getTeams() {
-        return teams;
+    public List<String> getAirports() {
+        return airports;
     }
 
-    public void setTeams(List<String> teams) {
-        this.teams = teams;
+    public void setAirports(List<String> airports) {
+        this.airports = airports;
     }
 
     @Override
     public String toString() {
-        return "TeamAirportDTO{" + "team=" + teams + '}';
+        return "AirportsDTO{" + "airports=" + airports + '}';
     }
 
     @Override
@@ -49,8 +49,8 @@ public class TeamAirportDTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TeamAirportDTO other = (TeamAirportDTO) obj;
-        if (!Objects.equals(this.teams, other.teams)) {
+        final AirportsDTO other = (AirportsDTO) obj;
+        if (!Objects.equals(this.airports, other.airports)) {
             return false;
         }
         return true;
