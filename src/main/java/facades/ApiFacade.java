@@ -33,6 +33,7 @@ public class ApiFacade {
 
     private static ApiFacade instance;
     private static List<TeamDTO> teamList = new ArrayList();
+    private static Boolean isActivatedOnce = false;
 
     //Private Constructor to ensure Singleton
     private ApiFacade() {
@@ -94,9 +95,14 @@ public class ApiFacade {
 
     public List<TeamDTO> getAllTeams() throws IOException, InterruptedException, ExecutionException {
 
+        System.out.println("------------> getAllTeams");
         List<String> URLS = new ArrayList();
         URLS.add("http://api.football-data.org/v2/competitions/PL/teams?season=2019");
-
+        System.out.println("isActivatedOnce" + isActivatedOnce);
+        if (isActivatedOnce) {
+            return teamList;
+        }
+        isActivatedOnce = true;
         return getAllTeamsData(URLS);
     }
 
