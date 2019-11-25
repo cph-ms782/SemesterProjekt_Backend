@@ -15,7 +15,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @author lam@cphbusiness.dk
  */
 @Path("fb")
 public class FootballResource {

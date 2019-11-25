@@ -1,10 +1,13 @@
 package rest;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import dto.AirportsDTO;
+import dto.MatchDTO;
 import dto.TeamAirportDTO;
 import facades.AirportFacade;
 import java.io.IOException;
 import java.net.ProtocolException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.ws.rs.Produces;
@@ -39,7 +42,7 @@ public class AirportResource {
     @Path("nearestairport/{team}")
     public String getNearestAirport(@PathParam("team") String team) throws IOException, ProtocolException, ExecutionException, InterruptedException {
         String data = facade.getNearestAirportFromTeam(team);
-        return "{\"airport\":\""+ data +"\"}";
+        return "{\"airport\":\"" + data + "\"}";
     }
 
     @GET
@@ -50,19 +53,20 @@ public class AirportResource {
         return new TeamAirportDTO(data);
     }
 
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("teams")
-//    public List<TeamDTO> getTeams() throws IOException, ProtocolException, ExecutionException, InterruptedException {
-//        List<TeamDTO> data = facade.getAllTeams();
-//        return data;
-//    }
-//
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("allteammatchresults/{id}")
-//    public List<MatchDTO> getMatchResults(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
-//        List<MatchDTO> data = facade.getAllDataMatches(id, true);
-//        return data;
-//    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("nearestmatch/{airportcode}")
+    public List<MatchDTO> getNearestMatch(@PathParam("airportcode") String airportcode) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+
+        // diff may not exceed 10 days
+        LocalDate date = LocalDate.now(); // Create a date object
+        LocalDate newDate = date.plusDays(10);
+        String fromDate = date.toString();
+        String toDate = newDate.toString();
+        System.out.println("airportcode: " + airportcode);
+        System.out.println("fromDate: " + fromDate);
+        System.out.println("toDate: " + toDate);
+        List<MatchDTO> data = facade.getAllMatchDatesNearAirport(airportcode, fromDate, toDate);
+        return data;
+    }
 }
