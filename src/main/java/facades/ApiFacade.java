@@ -3,6 +3,7 @@ package facades;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -21,6 +22,7 @@ import java.util.concurrent.Future;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dto.MatchDTO;
+import dto.StandingsDTO;
 import dto.TeamDTO;
 import entities.ParserOfDates;
 import java.util.regex.Matcher;
@@ -33,6 +35,7 @@ public class ApiFacade {
 
     private static ApiFacade instance;
     private static List<TeamDTO> teamList = new ArrayList();
+    private static List<StandingsDTO> standingsList = new ArrayList();
     private static Boolean isActivatedOnce = false;
 
     //Private Constructor to ensure Singleton
@@ -227,6 +230,79 @@ public class ApiFacade {
         }
         System.out.println("results size: " + teamList.size());
         return teamList;
+    }
+
+    public List<StandingsDTO> getStandings() throws IOException, InterruptedException, ExecutionException {
+
+        System.out.println("------------> getStandings");
+        List<String> URLS = new ArrayList();
+        URLS.add("http://api.football-data.org/v2/competitions/PL/standings");
+
+        return getSeasonStandings(URLS);
+    }
+
+    public List<StandingsDTO> getSeasonStandings(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
+
+        System.out.println("standingsList size: " + standingsList.size());
+        if (standingsList.size() == 0) {
+            Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .serializeNulls()
+                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                    .create();
+            ExecutorService workingJack = Executors.newCachedThreadPool();
+            for (String url : URLS) {
+                Future<JsonObject> future;
+                future = workingJack.submit(() -> {
+                    JsonObject jsonObject = new JsonParser().parse(getFootballApi(url)).getAsJsonObject();
+                    return jsonObject;
+                });
+                queue.add(future);
+            }
+            while (!queue.isEmpty()) {
+                Future<JsonObject> cpo = queue.poll();
+                if (cpo.isDone()) {
+                    try {
+                        System.out.println("inde i getSeasonStandings");
+                        // CHANGE WHEN USING OTHER API
+                        // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
+                        JsonArray jArrayStandings = cpo.get().get("standings").getAsJsonArray();
+                        JsonElement jArrayStandingsToTable = jArrayStandings.get(0);
+                        JsonArray jArrayTable = (JsonArray) jArrayStandingsToTable.getAsJsonObject().get("table");
+
+                        System.out.println("StandingsDTO følger");
+                        for (JsonElement teamStanding : jArrayTable) {
+                            System.out.println("team == " + teamStanding.getAsJsonObject().get("team").toString());
+                            System.out.println("teamID ======= " + teamStanding.getAsJsonObject().get("team").getAsJsonObject().get("id").toString());
+                            standingsList.add(new StandingsDTO(
+                                    teamStanding.getAsJsonObject().get("position").getAsString(),
+                                    teamStanding.getAsJsonObject().get("team").getAsJsonObject().get("id").getAsString(),
+                                    teamStanding.getAsJsonObject().get("playedGames").getAsString(),
+                                    teamStanding.getAsJsonObject().get("won").getAsString(),
+                                    teamStanding.getAsJsonObject().get("draw").getAsString(),
+                                    teamStanding.getAsJsonObject().get("lost").getAsString(),
+                                    teamStanding.getAsJsonObject().get("points").getAsString(),
+                                    teamStanding.getAsJsonObject().get("goalsFor").getAsString(),
+                                    teamStanding.getAsJsonObject().get("goalsAgainst").getAsString(),
+                                    teamStanding.getAsJsonObject().get("goalDifference").getAsString()
+                            ));
+
+                        }
+                    } catch (NullPointerException ex) {
+                        System.out.println("NullPointerException: " + ex);
+                    }
+                } else {
+                    queue.add(cpo);
+                }
+            }
+            workingJack.shutdown();
+            for (int i = 0; i < standingsList.size(); i++) {
+                System.out.println(standingsList.get(i));
+            }
+        }
+        System.out.println("standingsList size: " + standingsList.size());
+        return standingsList;
     }
 
 }

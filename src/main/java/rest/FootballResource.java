@@ -2,6 +2,7 @@ package rest;
 
 import dto.MatchDTO;
 import dto.MatchesDTO;
+import dto.StandingsDTO;
 import dto.TeamDTO;
 import facades.ApiFacade;
 import java.io.IOException;
@@ -56,4 +57,15 @@ public class FootballResource {
         facade = null;
         return data;
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("standings")
+    public List<StandingsDTO> getStandings() throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
+        List<StandingsDTO> data = facade.getStandings();
+        facade = null;
+        return data;
+    }
+    
 }
