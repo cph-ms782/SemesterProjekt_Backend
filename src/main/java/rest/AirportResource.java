@@ -47,9 +47,9 @@ public class AirportResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("nearestteam/{airport}")
-    public TeamAirportDTO getNearestTeam(@PathParam("airport") String airport) throws IOException, ProtocolException, ExecutionException, InterruptedException {
-        List<String> data = facade.getNearestTeamfromAirport(airport);
+    @Path("nearestteam/{airportcode}")
+    public TeamAirportDTO getNearestTeam(@PathParam("airportcode") String airportcode) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        List<String> data = facade.getNearestTeamfromAirport(airportcode);
         return new TeamAirportDTO(data);
     }
 

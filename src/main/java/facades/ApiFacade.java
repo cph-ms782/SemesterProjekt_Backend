@@ -124,7 +124,7 @@ public class ApiFacade {
             Future<JsonObject> cpo = queue.poll();
             if (cpo.isDone()) {
                 try {
-                    System.out.println("inde i koden");
+                    System.out.println("inde i koden (getSeasonMatches)");
                     // CHANGE WHEN USING OTHER API
                     // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                     for (JsonElement match : cpo.get().get("matches").getAsJsonArray()) {
@@ -200,21 +200,19 @@ public class ApiFacade {
             while (!queue.isEmpty()) {
                 Future<JsonObject> cpo = queue.poll();
                 if (cpo.isDone()) {
-                    try {
-                        System.out.println("inde i getAllTeamsData");
-                        // CHANGE WHEN USING OTHER API
-                        // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
-                        for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
-                            System.out.println("" + el);
-                            int jnhj = Integer.parseInt(el.getAsJsonObject().get("id").getAsString());
-                            teamList.add(new TeamDTO(
-                                    el.getAsJsonObject().get("name").getAsString(),
-                                    el.getAsJsonObject().get("crestUrl").getAsString(),
-                                    Integer.parseInt(el.getAsJsonObject().get("id").getAsString())
-                            ));
-                        }
-                    } catch (NullPointerException ex) {
-                        System.out.println("NullPointerException: " + ex);
+                    System.out.println("inde i getAllTeamsData");
+                    for (JsonElement el : cpo.get().get("teams").getAsJsonArray()) {
+                        teamList.add(new TeamDTO(
+                                el.getAsJsonObject().get("name").getAsString(),
+                                el.getAsJsonObject().get("crestUrl").getAsString(),
+                                Integer.parseInt(el.getAsJsonObject().get("id").getAsString()),
+                                el.getAsJsonObject().get("shortName").getAsString(),
+                                el.getAsJsonObject().get("tla").getAsString(),
+                                el.getAsJsonObject().get("address").getAsString(),
+                                el.getAsJsonObject().get("website").getAsString(),
+                                el.getAsJsonObject().get("clubColors").getAsString(),
+                                el.getAsJsonObject().get("venue").getAsString()
+                        ));
                     }
                 } else {
                     queue.add(cpo);
