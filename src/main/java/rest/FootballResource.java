@@ -4,6 +4,7 @@ import dto.MatchDTO;
 import dto.MatchesDTO;
 import dto.StandingsDTO;
 import dto.TeamDTO;
+import dto.TeamMemberDTO;
 import facades.ApiFacade;
 import java.io.IOException;
 import java.net.ProtocolException;
@@ -57,7 +58,7 @@ public class FootballResource {
         facade = null;
         return data;
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("standings")
@@ -67,5 +68,15 @@ public class FootballResource {
         facade = null;
         return data;
     }
-    
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+    @Path("teammembers/{id}")
+    public List<TeamMemberDTO> getTeamMembers(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
+        List<TeamMemberDTO> data = facade.getTeamMembers(id);
+        facade = null;
+        return data;
+    }
+
 }

@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 import dto.MatchDTO;
 import dto.StandingsDTO;
 import dto.TeamDTO;
+import dto.TeamMemberDTO;
 import entities.ParserOfDates;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +37,7 @@ public class ApiFacade {
     private static ApiFacade instance;
     private static List<TeamDTO> teamList = new ArrayList();
     private static List<StandingsDTO> standingsList = new ArrayList();
+    private static List<TeamMemberDTO> teamMembersList = new ArrayList();
     private static Boolean isActivatedOnce = false;
 
     //Private Constructor to ensure Singleton
@@ -78,7 +80,7 @@ public class ApiFacade {
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("X-Auth-Token", "82e97af72ae34501ab126fc871128f61");
         String jsonStr;
-        try (Scanner scan = new Scanner(con.getInputStream())) {
+        try (Scanner scan = new Scanner(con.getInputStream(),"UTF-8")) {
             jsonStr = null;
             if (scan.hasNext()) {
                 jsonStr = scan.nextLine();
@@ -301,6 +303,84 @@ public class ApiFacade {
         }
         System.out.println("standingsList size: " + standingsList.size());
         return standingsList;
+    }
+
+    public List<TeamMemberDTO> getTeamMembers(int id) throws IOException, InterruptedException, ExecutionException {
+
+        List<String> URLS = new ArrayList();
+
+        URLS.add("http://api.football-data.org/v2/teams/" + id);
+
+        return getAllTeamMembers(URLS);
+    }
+
+    public List<TeamMemberDTO> getAllTeamMembers(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
+
+        System.out.println("teamMembersList size: " + teamMembersList.size());
+        if (teamMembersList.size() == 0) {
+            Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .serializeNulls()
+                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                    .create();
+            ExecutorService workingJack = Executors.newCachedThreadPool();
+            for (String url : URLS) {
+                Future<JsonObject> future;
+                future = workingJack.submit(() -> {
+                    JsonObject jsonObject = new JsonParser().parse(getFootballApi(url)).getAsJsonObject();
+                    return jsonObject;
+                });
+                queue.add(future);
+            }
+            while (!queue.isEmpty()) {
+                Future<JsonObject> cpo = queue.poll();
+                if (cpo.isDone()) {
+                    try {
+                        System.out.println("inde i getAllTeamMembers");
+                        // CHANGE WHEN USING OTHER API
+                        // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
+                        JsonArray jArrayTeamMembers = cpo.get().get("squad").getAsJsonArray();
+//                        JsonElement jArrayStandingsToTable = jArrayTeamMembers.get(0);
+//                        JsonArray jArrayTable = (JsonArray) jArrayStandingsToTable.getAsJsonObject().get("table");
+
+                        System.out.println("TeamMemberDTO følger");
+                        for (JsonElement teamMember : jArrayTeamMembers) {
+                            String pos = teamMember.getAsJsonObject().get("role").getAsString();
+
+                            if (pos.equals("PLAYER")) {
+                                teamMembersList.add(new TeamMemberDTO(
+                                        teamMember.getAsJsonObject().get("name").getAsString(),
+                                        teamMember.getAsJsonObject().get("position").toString(),
+                                        getDates(teamMember.getAsJsonObject().get("dateOfBirth").getAsString()).toDate(),
+                                        teamMember.getAsJsonObject().get("countryOfBirth").getAsString(),
+                                        teamMember.getAsJsonObject().get("nationality").getAsString(),
+                                        teamMember.getAsJsonObject().get("role").getAsString()
+                                ));
+                            } else {
+                                teamMembersList.add(new TeamMemberDTO(
+                                        teamMember.getAsJsonObject().get("name").getAsString(),
+                                        getDates(teamMember.getAsJsonObject().get("dateOfBirth").getAsString()).toDate(),
+                                        teamMember.getAsJsonObject().get("countryOfBirth").getAsString(),
+                                        teamMember.getAsJsonObject().get("nationality").getAsString(),
+                                        teamMember.getAsJsonObject().get("role").getAsString()
+                                ));
+                            }
+                        }
+                    } catch (NullPointerException ex) {
+                        System.out.println("NullPointerException: " + ex);
+                    }
+                } else {
+                    queue.add(cpo);
+                }
+            }
+            workingJack.shutdown();
+            for (int i = 0; i < teamMembersList.size(); i++) {
+                System.out.println(teamMembersList.get(i));
+            }
+        }
+        System.out.println("teamMembersList size: " + teamMembersList.size());
+        return teamMembersList;
     }
 
 }
