@@ -309,7 +309,7 @@ public class ApiFacade {
 
         List<String> URLS = new ArrayList();
 
-        URLS.add("http://api.football-data.org/v2/teams/" + id);
+        URLS.add("http://api.football-data.org/v2/teams/" + id + "");
 
         return getAllTeamMembers(URLS);
     }
