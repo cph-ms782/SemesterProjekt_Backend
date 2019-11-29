@@ -351,7 +351,7 @@ public class ApiFacade {
                             if (pos.equals("PLAYER")) {
                                 teamMembersList.add(new TeamMemberDTO(
                                         teamMember.getAsJsonObject().get("name").getAsString(),
-                                        teamMember.getAsJsonObject().get("position").toString(),
+                                        teamMember.getAsJsonObject().get("position").getAsString(),
                                         getDates(teamMember.getAsJsonObject().get("dateOfBirth").getAsString()).toDate(),
                                         teamMember.getAsJsonObject().get("countryOfBirth").getAsString(),
                                         teamMember.getAsJsonObject().get("nationality").getAsString(),
