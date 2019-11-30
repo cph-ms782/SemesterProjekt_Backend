@@ -75,7 +75,6 @@ public class FootballResource {
     public List<TeamMemberDTO> getTeamMembers(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
         facade = ApiFacade.getApiFacade();
         List<TeamMemberDTO> data = facade.getTeamMembers(id);
-        facade = null;
         return data;
     }
 
