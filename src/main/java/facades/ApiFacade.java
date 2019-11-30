@@ -242,7 +242,8 @@ public class ApiFacade {
     }
 
     public List<StandingsDTO> getSeasonStandings(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
-
+        
+ //       standingsList.clear();
         System.out.println("standingsList size: " + standingsList.size());
         if (standingsList.size() == 0) {
             Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
@@ -316,6 +317,7 @@ public class ApiFacade {
 
     public List<TeamMemberDTO> getAllTeamMembers(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
 
+        teamMembersList.clear();
         System.out.println("teamMembersList size: " + teamMembersList.size());
         if (teamMembersList.size() == 0) {
             Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
@@ -341,8 +343,6 @@ public class ApiFacade {
                         // CHANGE WHEN USING OTHER API
                         // USE OTHER DTO FOR WHAT YOU NEED TO EXTRACT
                         JsonArray jArrayTeamMembers = cpo.get().get("squad").getAsJsonArray();
-//                        JsonElement jArrayStandingsToTable = jArrayTeamMembers.get(0);
-//                        JsonArray jArrayTable = (JsonArray) jArrayStandingsToTable.getAsJsonObject().get("table");
 
                         System.out.println("TeamMemberDTO følger");
                         for (JsonElement teamMember : jArrayTeamMembers) {
@@ -382,5 +382,4 @@ public class ApiFacade {
         System.out.println("teamMembersList size: " + teamMembersList.size());
         return teamMembersList;
     }
-
 }
