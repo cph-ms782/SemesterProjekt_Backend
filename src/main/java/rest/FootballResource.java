@@ -2,7 +2,9 @@ package rest;
 
 import dto.MatchDTO;
 import dto.MatchesDTO;
+import dto.StandingsDTO;
 import dto.TeamDTO;
+import dto.TeamMemberDTO;
 import facades.ApiFacade;
 import java.io.IOException;
 import java.net.ProtocolException;
@@ -15,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @author lam@cphbusiness.dk
  */
 @Path("fb")
 public class FootballResource {
@@ -57,4 +58,24 @@ public class FootballResource {
         facade = null;
         return data;
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("standings")
+    public List<StandingsDTO> getStandings() throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
+        List<StandingsDTO> data = facade.getStandings();
+        facade = null;
+        return data;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+    @Path("teammembers/{id}")
+    public List<TeamMemberDTO> getTeamMembers(@PathParam("id") int id) throws IOException, ProtocolException, ExecutionException, InterruptedException {
+        facade = ApiFacade.getApiFacade();
+        List<TeamMemberDTO> data = facade.getTeamMembers(id);
+        return data;
+    }
+
 }
