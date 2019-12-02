@@ -243,9 +243,8 @@ public class ApiFacade {
 
     public List<StandingsDTO> getSeasonStandings(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
         
- //       standingsList.clear();
         System.out.println("standingsList size: " + standingsList.size());
-        if (standingsList.size() == 0) {
+        
             Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
@@ -301,7 +300,6 @@ public class ApiFacade {
             for (int i = 0; i < standingsList.size(); i++) {
                 System.out.println(standingsList.get(i));
             }
-        }
         System.out.println("standingsList size: " + standingsList.size());
         return standingsList;
     }
@@ -317,9 +315,7 @@ public class ApiFacade {
 
     public List<TeamMemberDTO> getAllTeamMembers(List<String> URLS) throws ProtocolException, IOException, InterruptedException, ExecutionException {
 
-        teamMembersList.clear();
         System.out.println("teamMembersList size: " + teamMembersList.size());
-        if (teamMembersList.size() == 0) {
             Queue<Future<JsonObject>> queue = new ArrayBlockingQueue(URLS.size());
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
@@ -378,7 +374,6 @@ public class ApiFacade {
             for (int i = 0; i < teamMembersList.size(); i++) {
                 System.out.println(teamMembersList.get(i));
             }
-        }
         System.out.println("teamMembersList size: " + teamMembersList.size());
         return teamMembersList;
     }
