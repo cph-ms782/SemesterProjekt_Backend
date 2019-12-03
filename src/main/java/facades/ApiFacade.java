@@ -385,13 +385,4 @@ public class ApiFacade {
         return teamMembersList;
     }
     
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        ApiFacade fac = new ApiFacade();
-
-        ArrayList<String> URLS = new ArrayList();
-        URLS.add("http://api.football-data.org/v2/competitions/PL/standings");
-        
-        System.out.println(fac.getSeasonStandings(URLS));
-
-    }
 }
