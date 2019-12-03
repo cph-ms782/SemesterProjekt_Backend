@@ -287,7 +287,8 @@ public class ApiFacade {
                                     teamStanding.getAsJsonObject().get("points").getAsString(),
                                     teamStanding.getAsJsonObject().get("goalsFor").getAsString(),
                                     teamStanding.getAsJsonObject().get("goalsAgainst").getAsString(),
-                                    teamStanding.getAsJsonObject().get("goalDifference").getAsString()
+                                    teamStanding.getAsJsonObject().get("goalDifference").getAsString(),
+                                    teamStanding.getAsJsonObject().get("team").getAsJsonObject().get("crestUrl").getAsString()
                             ));
 
                         }
@@ -382,5 +383,15 @@ public class ApiFacade {
         }
         System.out.println("teamMembersList size: " + teamMembersList.size());
         return teamMembersList;
+    }
+    
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        ApiFacade fac = new ApiFacade();
+
+        ArrayList<String> URLS = new ArrayList();
+        URLS.add("http://api.football-data.org/v2/competitions/PL/standings");
+        
+        System.out.println(fac.getSeasonStandings(URLS));
+
     }
 }

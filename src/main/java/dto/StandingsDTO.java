@@ -24,11 +24,12 @@ public class StandingsDTO {
     private String goalsFor;
     private String goalsAgainst;
     private String goalDifference;
+    private String crestUrl;
 
     public StandingsDTO() {
     }
 
-    public StandingsDTO(String position, String teamID, String playedGames, String won, String draw, String lost, String points, String goalsFor, String goalsAgainst, String goalDifference) {
+    public StandingsDTO(String position, String teamID, String playedGames, String won, String draw, String lost, String points, String goalsFor, String goalsAgainst, String goalDifference, String crestUrl) {
         this.position = position;
         this.teamID = teamID;
         this.playedGames = playedGames;
@@ -39,12 +40,14 @@ public class StandingsDTO {
         this.goalsFor = goalsFor;
         this.goalsAgainst = goalsAgainst;
         this.goalDifference = goalDifference;
+        this.crestUrl = crestUrl;
     }
 
     @Override
     public String toString() {
-        return "StandingsDTO{" + "position=" + position + ", teamID=" + teamID + ", playedGames=" + playedGames + ", won=" + won + ", draw=" + draw + ", lost=" + lost + ", points=" + points + ", goalsFor=" + goalsFor + ", goalsAgainst=" + goalsAgainst + ", goalDifference=" + goalDifference + '}';
+        return "StandingsDTO{" + "position=" + position + ", teamID=" + teamID + ", playedGames=" + playedGames + ", won=" + won + ", draw=" + draw + ", lost=" + lost + ", points=" + points + ", goalsFor=" + goalsFor + ", goalsAgainst=" + goalsAgainst + ", goalDifference=" + goalDifference + ", crestUrl=" + crestUrl + '}';
     }
+
 
     public String getPosition() {
         return position;
@@ -126,18 +129,28 @@ public class StandingsDTO {
         this.goalDifference = goalDifference;
     }
 
+    public String getCrestUrl() {
+        return crestUrl;
+    }
+
+    public void setCrestUrl(String crestUrl) {
+        this.crestUrl = crestUrl;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.position);
-        hash = 29 * hash + Objects.hashCode(this.teamID);
-        hash = 29 * hash + Objects.hashCode(this.playedGames);
-        hash = 29 * hash + Objects.hashCode(this.won);
-        hash = 29 * hash + Objects.hashCode(this.draw);
-        hash = 29 * hash + Objects.hashCode(this.lost);
-        hash = 29 * hash + Objects.hashCode(this.goalsFor);
-        hash = 29 * hash + Objects.hashCode(this.goalsAgainst);
-        hash = 29 * hash + Objects.hashCode(this.goalDifference);
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.position);
+        hash = 37 * hash + Objects.hashCode(this.teamID);
+        hash = 37 * hash + Objects.hashCode(this.playedGames);
+        hash = 37 * hash + Objects.hashCode(this.won);
+        hash = 37 * hash + Objects.hashCode(this.draw);
+        hash = 37 * hash + Objects.hashCode(this.lost);
+        hash = 37 * hash + Objects.hashCode(this.points);
+        hash = 37 * hash + Objects.hashCode(this.goalsFor);
+        hash = 37 * hash + Objects.hashCode(this.goalsAgainst);
+        hash = 37 * hash + Objects.hashCode(this.goalDifference);
+        hash = 37 * hash + Objects.hashCode(this.crestUrl);
         return hash;
     }
 
@@ -171,6 +184,9 @@ public class StandingsDTO {
         if (!Objects.equals(this.lost, other.lost)) {
             return false;
         }
+        if (!Objects.equals(this.points, other.points)) {
+            return false;
+        }
         if (!Objects.equals(this.goalsFor, other.goalsFor)) {
             return false;
         }
@@ -180,9 +196,10 @@ public class StandingsDTO {
         if (!Objects.equals(this.goalDifference, other.goalDifference)) {
             return false;
         }
+        if (!Objects.equals(this.crestUrl, other.crestUrl)) {
+            return false;
+        }
         return true;
     }
-    
-    
-    
+
 }
