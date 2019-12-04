@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "278485aa56a66be8bee2c4e569e98001",
+    "revision": "b986b2e8281878e56d576c05a2ac7a86",
     "url": "./index.html"
   },
   {
-    "revision": "5fc0332e0bb7c32ee05d",
-    "url": "./static/css/main.a6fe7166.chunk.css"
+    "revision": "8fe403085772ce401190",
+    "url": "./static/css/main.2e467b26.chunk.css"
   },
   {
-    "revision": "d02149932008547705d1",
-    "url": "./static/js/2.8b46043d.chunk.js"
+    "revision": "3260cdeb3f13a5db7ab9",
+    "url": "./static/js/2.8fa74ba3.chunk.js"
   },
   {
-    "revision": "5fc0332e0bb7c32ee05d",
-    "url": "./static/js/main.3e6fd682.chunk.js"
+    "revision": "8fe403085772ce401190",
+    "url": "./static/js/main.0e528158.chunk.js"
   },
   {
     "revision": "6c113fa21984866f6957",
@@ -28,8 +28,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/attacker.09a8c11c.png"
   },
   {
-    "revision": "29c5b127ef76e4528d522356f9c20329",
-    "url": "./static/media/banner_marple.29c5b127.png"
+    "revision": "4f512ae496a0910fc7d7d5b9e0f68156",
+    "url": "./static/media/banner_marple.4f512ae4.png"
   },
   {
     "revision": "c9d865bb93e7181bfa9177d086f0d1a7",
@@ -40,7 +40,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "./static/media/buy_background.f7c93724.png"
   },
   {
+    "revision": "4e9828f117284e5994df4f370bba363b",
+    "url": "./static/media/down-arrow.4e9828f1.jpg"
+  },
+  {
     "revision": "3f9f3e73913b0fd0fcb1bda5821f29e9",
     "url": "./static/media/plmap.3f9f3e73.svg"
+  },
+  {
+    "revision": "82c049dea97a9d52843367395804b350",
+    "url": "./static/media/premier-league-trophy.82c049de.jpg"
   }
 ]);

@@ -1,27 +1,29 @@
 {
   "files": {
-    "main.css": "./static/css/main.a6fe7166.chunk.css",
-    "main.js": "./static/js/main.3e6fd682.chunk.js",
-    "main.js.map": "./static/js/main.3e6fd682.chunk.js.map",
+    "main.css": "./static/css/main.2e467b26.chunk.css",
+    "main.js": "./static/js/main.0e528158.chunk.js",
+    "main.js.map": "./static/js/main.0e528158.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.46790870.js",
     "runtime-main.js.map": "./static/js/runtime-main.46790870.js.map",
-    "static/js/2.8b46043d.chunk.js": "./static/js/2.8b46043d.chunk.js",
-    "static/js/2.8b46043d.chunk.js.map": "./static/js/2.8b46043d.chunk.js.map",
+    "static/js/2.8fa74ba3.chunk.js": "./static/js/2.8fa74ba3.chunk.js",
+    "static/js/2.8fa74ba3.chunk.js.map": "./static/js/2.8fa74ba3.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.0ecdc528864a85925f5e18d5fb510b09.js": "./precache-manifest.0ecdc528864a85925f5e18d5fb510b09.js",
+    "precache-manifest.94f7d215bcf1eb53a6afd9423b6741dd.js": "./precache-manifest.94f7d215bcf1eb53a6afd9423b6741dd.js",
     "service-worker.js": "./service-worker.js",
-    "static/css/main.a6fe7166.chunk.css.map": "./static/css/main.a6fe7166.chunk.css.map",
+    "static/css/main.2e467b26.chunk.css.map": "./static/css/main.2e467b26.chunk.css.map",
     "static/media/ReactNodes.svg": "./static/media/ReactNodes.7e074f25.svg",
     "static/media/attacker.png": "./static/media/attacker.09a8c11c.png",
-    "static/media/banner_marple.png": "./static/media/banner_marple.29c5b127.png",
+    "static/media/banner_marple.png": "./static/media/banner_marple.4f512ae4.png",
     "static/media/buy.png": "./static/media/buy.c9d865bb.png",
     "static/media/buy_background.png": "./static/media/buy_background.f7c93724.png",
-    "static/media/plmap.svg": "./static/media/plmap.3f9f3e73.svg"
+    "static/media/down-arrow.jpg": "./static/media/down-arrow.4e9828f1.jpg",
+    "static/media/plmap.svg": "./static/media/plmap.3f9f3e73.svg",
+    "static/media/premier-league-trophy.jpg": "./static/media/premier-league-trophy.82c049de.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.46790870.js",
-    "static/js/2.8b46043d.chunk.js",
-    "static/css/main.a6fe7166.chunk.css",
-    "static/js/main.3e6fd682.chunk.js"
+    "static/js/2.8fa74ba3.chunk.js",
+    "static/css/main.2e467b26.chunk.css",
+    "static/js/main.0e528158.chunk.js"
   ]
 }
